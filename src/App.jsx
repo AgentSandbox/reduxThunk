@@ -1,35 +1,38 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import {useState} from "react";
 import './App.css'
+import {v1} from "uuid"
 
 function App() {
-  const [count, setCount] = useState(0)
+    const [todo, setTodo] = useState([])
+    const [text, setText] = useState("")
 
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    const onClickHandle = () => {
+        if (text) {
+            setTodo([...todo, {
+                id: v1(),
+                text: text,
+                completed: false
+            }])
+        }
+        setText("")
+    }
+    return (
+        <div className="App">
+            <label>
+                <input value={text} onChange={(e) => setText(e.target.value)} type="text"/>
+                <button onClick={onClickHandle}>ADD TODO</button>
+            </label>
+            <ul>
+            {
+                todo.map(t => <li key={t.id}>
+                    <input type="checkbox"/>
+                    <span>{t.text}</span>
+                    <span style={{color: 'red'}}>&times;</span>
+                </li>)
+            }
+            </ul>
+        </div>
+    )
 }
 
 export default App
