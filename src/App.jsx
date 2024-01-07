@@ -1,20 +1,24 @@
 import {useState} from "react";
 import './App.css'
 import {v1} from "uuid"
+import {useDispatch, useSelector} from "react-redux"
+import {addTodo} from "./store/todoSlice.jsx";
+
 
 function App() {
-    const [todo, setTodo] = useState([])
     const [text, setText] = useState("")
+
+    const dispatch = useDispatch()
+    const textTodo = useSelector((state) => state.todos.arr)
 
     const onClickHandle = () => {
         if (text) {
-            setTodo([...todo, {
+            dispatch(addTodo({
                 id: v1(),
                 text: text,
                 completed: false
-            }])
+            }))
         }
-        setText("")
     }
     return (
         <div className="App">
@@ -23,13 +27,13 @@ function App() {
                 <button onClick={onClickHandle}>ADD TODO</button>
             </label>
             <ul>
-            {
-                todo.map(t => <li key={t.id}>
-                    <input type="checkbox"/>
-                    <span>{t.text}</span>
-                    <span style={{color: 'red'}}>&times;</span>
-                </li>)
-            }
+                {
+                    textTodo.map(t => <li key={t.id}>
+                        <input type="checkbox"/>
+                        <span>{t.text}</span>
+                        <span style={{color: 'red'}}>&times;</span>
+                    </li>)
+                }
             </ul>
         </div>
     )
