@@ -1,4 +1,23 @@
-.App{
-  text-align: center;
-  font-size: xx-large;
+.App {
+    text-align: center;
+    font-size: xx-large;
+}
+
+li {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+}
+
+li > input {
+    cursor: pointer;
+}
+
+.textCompleted {
+    text-decoration: line-through;
+}
+
+.delete {
+    color: red;
+    cursor: pointer;
 }
