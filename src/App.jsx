@@ -4,7 +4,6 @@ import {v1} from "uuid"
 import {useDispatch, useSelector} from "react-redux"
 import {addTodo, deleteTodo, toggleTodo, fetchTodos} from "./store/todoSlice.jsx";
 
-
 function App() {
     const [text, setText] = useState("")
 
