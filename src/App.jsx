@@ -1,8 +1,8 @@
-import {useState} from "react";
+import {useState, useEffect} from "react";
 import './App.css'
 import {v1} from "uuid"
 import {useDispatch, useSelector} from "react-redux"
-import {addTodo, deleteTodo, toggleTodo} from "./store/todoSlice.jsx";
+import {addTodo, deleteTodo, toggleTodo, fetchTodos} from "./store/todoSlice.jsx";
 
 
 function App() {
@@ -15,12 +15,17 @@ function App() {
         if (text) {
             dispatch(addTodo({
                 id: v1(),
-                text: text,
+                title: text,
                 completed: false
             }))
         }
         setText("")
     }
+
+    useEffect(()=>{
+        dispatch(fetchTodos());
+    },[dispatch]);
+
     return (
         <div className="App">
             <label>
@@ -42,7 +47,7 @@ function App() {
                         <span
                             className={t.completed?"textCompleted":""}
                         >
-                            {t.text}
+                            {t.title}
                         </span>
                         <span
                             onClick={()=>{dispatch(deleteTodo(t.id))}}
