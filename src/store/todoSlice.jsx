@@ -2,12 +2,18 @@ import {createAsyncThunk, createSlice} from "@reduxjs/toolkit"
 
 export const fetchTodos = createAsyncThunk(
     'todo/fetchTodos',
-    async function () {
-        const response = await fetch('https://jsonplaceholder.typicode.com/todos?_limit=10');
+    async function (_, {rejectWithValue}) {
+        try {
+            const response = await fetch('https://jsonplaceholder.typicode.com/todos?_limit=10');
+            if (!response.ok) {
+                throw new Error('Server Error!');
+            }
+            const data = await response.json();
+            return data;
 
-        const data = await response.json();
-
-        return data;
+        } catch (error) {
+            return rejectWithValue(error.message)
+        }
     }
 );
 
@@ -35,13 +41,16 @@ export const todoSlice = createSlice({
     extraReducers: (builder) => {
         builder
             .addCase(fetchTodos.pending, (state) => {
-                state.satus = "loading";
-                state.err = "";
+                console.log("LOADING")
+                state.status = "loading";
+                state.error = "";
             })
-            .addCase(fetchTodos.rejected, (state, action) => {
-                state.satus = "error";
-                state.error = action.payload;
-            })
+            .addCase(fetchTodos.rejected,
+                (state, action
+                ) => {
+                    state.status = "error";
+                    state.error = action.payload;
+                })
             .addCase(fetchTodos.fulfilled, (state, action) => {
                 state.arr = action.payload;
                 state.status = 'done';

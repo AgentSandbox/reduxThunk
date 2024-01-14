@@ -1,14 +1,18 @@
 import {useState, useEffect} from "react";
+import {useDispatch, useSelector} from "react-redux"
+
+import {addTodo, fetchTodos} from "./store/todoSlice.jsx";
+import ListTodo from "./components/ListTodo.jsx";
 import './App.css'
 import {v1} from "uuid"
-import {useDispatch, useSelector} from "react-redux"
-import {addTodo, deleteTodo, toggleTodo, fetchTodos} from "./store/todoSlice.jsx";
+import NewTodoForm from "./components/NewTodoForm.jsx";
 
 function App() {
     const [text, setText] = useState("")
 
     const dispatch = useDispatch()
-    const textTodo = useSelector((state) => state.todos.arr)
+    const error = useSelector((state) => state.todos.error)
+    const status = useSelector((state) => state.todos.status)
 
     const onClickHandle = () => {
         if (text) {
@@ -21,42 +25,21 @@ function App() {
         setText("")
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         dispatch(fetchTodos());
-    },[dispatch]);
+    }, [dispatch]);
 
     return (
         <div className="App">
-            <label>
-                <input
-                    value={text}
-                    onChange={(e) => setText(e.target.value)}
-                    type="text"
-                />
-                <button onClick={onClickHandle}>ADD TODO</button>
-            </label>
-            <ul>
-                {
-                    textTodo.map(t => <li key={t.id}>
-                        <input
-                            onClick={()=>{dispatch(toggleTodo(t.id))}}
-                            type="checkbox"
-                            checked={t.completed}
-                        />
-                        <span
-                            className={t.completed?"textCompleted":""}
-                        >
-                            {t.title}
-                        </span>
-                        <span
-                            onClick={()=>{dispatch(deleteTodo(t.id))}}
-                            className="delete"
-                        >
-                            &times;
-                        </span>
-                    </li>)
-                }
-            </ul>
+            <NewTodoForm
+                value={text}
+                updateText={setText}
+                handleAction={onClickHandle}
+            />
+            {error && <h2>An error occured: {error}</h2>}
+            {status === "loading" && <h2>LOADING !!!!!!</h2>}
+
+            <ListTodo/>
         </div>
     )
 }
